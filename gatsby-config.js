@@ -71,7 +71,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-netlify-identity`,
       options: {
-        url: `https://artofjayjoson.netlify.app/`, // required!
+        url: `https://artofjayjoson.com/`, // required!
       },
     },
     {
