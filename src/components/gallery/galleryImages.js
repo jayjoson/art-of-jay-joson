@@ -97,6 +97,45 @@ const GalleryImages = props => {
           }
         }
       }
+
+      reels: allFile(filter: { absolutePath: { regex: "/reels/" } }) {
+        edges {
+          node {
+            id
+            childVideoFfmpeg {
+              webm: transcode(
+                codec: "libvpx-vp9"
+                fileExtension: "webm"
+                outputOptions: ["-crf 20", "-b:v 0"]
+                maxWidth: 10
+              ) {
+                src
+                width
+                aspectRatio
+                height
+                presentationMaxHeight
+                presentationMaxWidth
+                fileExtension
+                originalName
+              }
+              mp4: transcode(
+                maxWidth: 900
+                fileExtension: "mp4"
+                codec: "libx264"
+              ) {
+                width
+                src
+                presentationMaxWidth
+                presentationMaxHeight
+                originalName
+                height
+                fileExtension
+                aspectRatio
+              }
+            }
+          }
+        }
+      }
     }
   `);
 
@@ -116,6 +155,9 @@ const GalleryImages = props => {
     case 3:
       imageData = data.storyBoards;
       break;
+    case 4:
+      imageData = data.reels;
+      break;
 
     default:
       break;
@@ -126,7 +168,7 @@ const GalleryImages = props => {
   const [lightbox, setLightbox] = useState(false);
 
   const handleClick = node => {
-    if (props.category === 1) {
+    if (props.category === 1 || props.category === 4) {
       setVideo(node.childVideoFfmpeg);
     } else {
       setImage(node.childImageSharp.fluid);
@@ -186,7 +228,7 @@ const GalleryImages = props => {
             onClick={() => handleClose()}
             aria-hidden='true'
           />
-          {props.category === 1 ? (
+          {props.category === 1 || props.category === 4 ? (
             <Video
               muted
               autoPlay
@@ -214,7 +256,7 @@ const GalleryImages = props => {
             onClick={() => handleClick(node)}
             aria-hidden='true'
           >
-            {props.category === 1 ? (
+            {props.category === 1 || props.category === 4 ? (
               <Video
                 id={node.id}
                 muted
